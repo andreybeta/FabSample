@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
         pages.add(FragmentPagerItem.of("Hoy", DemoFragment.class));
-        pages.add(FragmentPagerItem.of("Calendario", DemoFragment.class));
+        pages.add(FragmentPagerItem.of("Calendario", CalendarFragment.class));
 
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
