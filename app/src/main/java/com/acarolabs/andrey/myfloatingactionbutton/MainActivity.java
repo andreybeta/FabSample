@@ -1,22 +1,22 @@
 package com.acarolabs.andrey.myfloatingactionbutton;
 
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ScrollDirectionListener;
-
-import java.io.LineNumberInputStream;
-
+import android.view.ViewGroup;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -25,46 +25,47 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String[] items = new String[100];
-        for (int i=0; i < 100; i++) {
-            items[i] = "Text " + i;
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("HOLA");
+        setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //ActionBar actionBar = getSupportActionBar();
 
-        ListView list = (ListView) findViewById(android.R.id.list);
-        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        list.setAdapter(stringArrayAdapter);
+        ViewGroup tab = (ViewGroup) findViewById(R.id.tab);
+        tab.addView(LayoutInflater.from(this).inflate(R.layout.demo_basic, tab, false));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.attachToListView(list, new ScrollDirectionListener() {
-            @Override
-            public void onScrollDown() {
-                Log.d("ListViewFragment", "onScrollDown()");
-            }
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        SmartTabLayout viewPagerTab = (SmartTabLayout) findViewById(R.id.viewpagertab);
+        //demo.setup(viewPagerTab);
 
-            @Override
-            public void onScrollUp() {
-                Log.d("ListViewFragment", "onScrollUp()");
-            }
-        }, new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                Log.d("ListViewFragment", "onScrollStateChanged()");
-            }
+        FragmentPagerItems pages = new FragmentPagerItems(this);
+        pages.add(FragmentPagerItem.of("Hoy", DemoFragment.class));
+        pages.add(FragmentPagerItem.of("Calendario", DemoFragment.class));
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.d("ListViewFragment", "onScroll()");
-            }
-        });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "CLICk", Toast.LENGTH_SHORT).show();
-            }
-        });
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), pages);
+
+        viewPager.setAdapter(adapter);
+        viewPagerTab.setViewPager(viewPager);
     }
 
+    public static class DemoFragment extends Fragment {
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_fab, container, false);
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            //int position = FragmentPagerItem.getPosition(getArguments());
+            //TextView title = (TextView) view.findViewById(R.id.item_title);
+            //title.setText("nose " + position);
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
